@@ -23,26 +23,29 @@ class _CategoriesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NewsService>(
-      builder: (_) => ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: _.categories.length,
-        itemBuilder: (context, i) {
-          return Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                _CategoryIcon(_.categories[i].icon),
-                const SizedBox(height: 5.0),
-                Container(
-                  child: Text(
-                    _.categories[i].name,
-                    overflow: TextOverflow.fade,
+      builder: (_) => Container(
+        height: 81.0,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _.categories.length,
+          itemBuilder: (context, i) {
+            return Container(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  _CategoryIcon(_.categories[i].icon),
+                  const SizedBox(height: 5.0),
+                  Container(
+                    child: Text(
+                      _.categories[i].name,
+                      overflow: TextOverflow.fade,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
