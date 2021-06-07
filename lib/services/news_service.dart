@@ -9,11 +9,27 @@ class NewsService extends GetxController {
   final _path = '/v2/top-headlines';
   final _apiKey = 'dd483805494e4e119ee4408f658384aa';
 
-  RxList headlines = [].obs;
+  // Selected category
+  String _selectedCategory = 'Business';
+  String get selectedCategory => _selectedCategory;
+  set selectedCategory(String category) {
+    _selectedCategory = category;
+
+    // Update news list
+    this.getArticlesByCategory(category);
+
+    update();
+  }
+
+  List<Article> headlines = [];
+
+  Map<String, List<Article>> categoriesNews = {};
+
+  List<Article> get getCurrentCategoryNews =>
+      categoriesNews[_selectedCategory]!;
 
   List<Category> categories = [
-    Category(FontAwesomeIcons.globe, 'General'),
-    Category(FontAwesomeIcons.bitcoin, 'Business'),
+    Category(FontAwesomeIcons.building, 'Business'),
     Category(FontAwesomeIcons.medkit, 'Health'),
     Category(FontAwesomeIcons.vials, 'Science'),
     Category(FontAwesomeIcons.android, 'Technology'),
@@ -23,12 +39,19 @@ class NewsService extends GetxController {
 
   void onInit() {
     this.getTopHeadlines();
+
+    categories.forEach((element) {
+      this.categoriesNews[element.name] = <Article>[];
+    });
+
+    this.getArticlesByCategory(_selectedCategory);
+
     super.onInit();
   }
 
   // Fill headlines list
   Future<void> getTopHeadlines() async {
-    headlines.value = [];
+    headlines = [];
 
     final url = Uri.https(
       _authority,
@@ -44,6 +67,28 @@ class NewsService extends GetxController {
 
     // Add news to list
     this.headlines.addAll(newsResponse.articles);
+
+    update();
+  }
+
+  // Fill category list
+  Future<void> getArticlesByCategory(String category) async {
+    categoriesNews[category] = <Article>[];
+
+    final url = Uri.https(
+      _authority,
+      _path,
+      {
+        'apiKey': _apiKey,
+        'language': 'en',
+        'category': category.toLowerCase(),
+      },
+    );
+
+    final resp = await http.get(url);
+    final newsResponse = newsResponseFromJson(resp.body);
+
+    this.categoriesNews[category]!.addAll(newsResponse.articles);
 
     update();
   }

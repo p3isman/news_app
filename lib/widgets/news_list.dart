@@ -5,23 +5,20 @@ import 'package:news_application/controllers/tabs_controller.dart';
 import 'package:news_application/models/news_model.dart';
 
 class NewsList extends StatelessWidget {
-  const NewsList(this.list);
+  const NewsList(this.list, {this.hasController = true});
 
-  final RxList list;
+  final List<Article> list;
+  final bool hasController;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TabsController>(
       builder: (_) => ListView.separated(
         separatorBuilder: (context, i) => Divider(),
-        controller: _.scrollController,
+        controller: hasController ? _.scrollController : null,
         itemCount: list.length,
         itemBuilder: (context, i) {
-          return Column(
-            children: [
-              _SingleNews(list[i], i),
-            ],
-          );
+          return _SingleNews(list[i], i);
         },
       ),
     );

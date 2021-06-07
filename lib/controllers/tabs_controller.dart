@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TabsController extends GetxController {
-  var scrollPosition = 0.0.obs;
+  var scrollPosition = 0.0;
   final ScrollController scrollController = new ScrollController();
 
-  var _bottomBarIndex = 0.obs;
+  var _bottomBarIndex = 0;
   final PageController _pageController = new PageController();
 
-  int get bottomBarIndex => _bottomBarIndex.value;
+  int get bottomBarIndex => _bottomBarIndex;
   PageController get pageController => _pageController;
 
   set bottomBarIndex(int i) {
-    _bottomBarIndex.value = i;
+    _bottomBarIndex = i;
 
     // Change PageView
     pageController.animateToPage(
